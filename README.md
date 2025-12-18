@@ -21,6 +21,11 @@ git submodule init
 git submodule update
 ```
 
+#### Reconstruir todos los submodules (inicializar y actualizar recursivamente)
+```bash
+git submodule update --init --recursive
+```
+
 #### Agregar un nuevo submodule
 ```bash
 git submodule add <url-del-repositorio> <directorio-destino>
