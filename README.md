@@ -58,6 +58,46 @@ microservicios-launcher/
 - `start.sh`: Script de inicio individual
 - `stop.sh`: Script de parada individual
 
+## Docker
+
+### Ejecutar todos los microservicios con Docker
+
+#### Construir e iniciar todos los servicios
+```bash
+docker compose up --build
+```
+
+#### Ejecutar en segundo plano
+```bash
+docker compose up --build -d
+```
+
+#### Detener todos los servicios
+```bash
+docker compose down
+```
+
+#### Ver logs de los servicios
+```bash
+docker compose logs -f
+```
+
+### Solución de problemas
+
+#### Error: Container name already in use
+Si obtienes un error de que el nombre del contenedor ya está en uso:
+
+```bash
+# Detener y remover todos los contenedores
+docker compose down
+
+# Remover contenedores específicos si es necesario
+docker rm -f nats-server client-gateway
+
+# Luego ejecutar nuevamente
+docker compose up --build
+```
+
 ### Notas importantes
 
 - Cada submodule apunta a un commit específico
