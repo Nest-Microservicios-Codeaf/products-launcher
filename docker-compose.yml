@@ -1,21 +1,21 @@
 services:
-  orders-db:
-    image: postgres:16.2
-    container_name: orders-db
-    restart: always
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234567
-      POSTGRES_DB: orders_db
-    volumes:
-      - orders_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # orders-db:
+  #   image: postgres:16.2
+  #   container_name: orders-db
+  #   restart: always
+  #   ports:
+  #     - "5433:5432"
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 1234567
+  #     POSTGRES_DB: orders_db
+  #   volumes:
+  #     - orders_db_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
   nats-server:
     image: nats:2.10.5-alpine
@@ -25,42 +25,42 @@ services:
       - "8222:8222"
     command: ["-js", "-m", "8222"]
 
-  products-ms:
-    build: ./products-ms
-    container_name: products-ms
-    ports:
-      - "3000:3000"
-    environment:
-      - PORT=3000
-      - DATABASE_URL=file:./dev.db
-      - NATS_SERVERS=nats://nats-server:4222
-    depends_on:
-      - nats-server
-    volumes:
-      - ./products-ms/src:/usr/src/app/src
-    command: npm run start:dev
+  # products-ms:
+  #   build: ./products-ms
+  #   container_name: products-ms
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - PORT=3000
+  #     - DATABASE_URL=file:./dev.db
+  #     - NATS_SERVERS=nats://nats-server:4222
+  #   depends_on:
+  #     - nats-server
+  #   volumes:
+  #     - ./products-ms/src:/usr/src/app/src
+  #   command: npm run start:dev
 
-  orders-ms:
-    build: ./orders-ms
-    container_name: orders-ms
-    ports:
-      - "3002:3002"
-    environment:
-      - PORT=3002
-      - DATABASE_URL=postgresql://postgres:1234567@orders-db:5432/orders_db
-      - PRODUCTS_MICROSERVICE_URL=products-ms
-      - PRODUCTS_MICROSERVICE_PORT=3000
-      - NATS_SERVERS=nats://nats-server:4222
-    depends_on:
-      orders-db:
-        condition: service_healthy
-      nats-server:
-        condition: service_started
-      products-ms:
-        condition: service_started
-    volumes:
-      - ./orders-ms/src:/usr/src/app/src
-    command: npm run start:dev
+  # orders-ms:
+  #   build: ./orders-ms
+  #   container_name: orders-ms
+  #   ports:
+  #     - "3002:3002"
+  #   environment:
+  #     - PORT=3002
+  #     - DATABASE_URL=postgresql://postgres:1234567@orders-db:5432/orders_db
+  #     - PRODUCTS_MICROSERVICE_URL=products-ms
+  #     - PRODUCTS_MICROSERVICE_PORT=3000
+  #     - NATS_SERVERS=nats://nats-server:4222
+  #   depends_on:
+  #     orders-db:
+  #       condition: service_healthy
+  #     nats-server:
+  #       condition: service_started
+  #     products-ms:
+  #       condition: service_started
+  #   volumes:
+  #     - ./orders-ms/src:/usr/src/app/src
+  #   command: npm run start:dev
 
   client-gateway:
     build: ./client-gateway
@@ -72,8 +72,8 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
     depends_on:
       - nats-server
-      - products-ms
-      - orders-ms
+      # - products-ms
+      # - orders-ms
 
 volumes:
   orders_db_data:
